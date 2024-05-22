@@ -1,10 +1,10 @@
-import { Router } from 'express'
-import authController from '../controller/auth.controller.js'
+import { Router } from "express";
+import authController from "../controller/auth.controller.js";
+import authValidation from "../auth.validation.js";
+const authRouter = Router();
 
-const authRouter = Router()
+authRouter.post('/login', authValidation.loginValidation, authController.login)
+authRouter.post("/register", authValidation.registerValidation, authController.register);
+authRouter.post("/getTokens", authController.getTokens);
 
-authRouter.post('/login', authController.login)
-authRouter.post('/register', authController.register)
-authRouter.post('/getTokens', authController.getTokens)
-
-export default authRouter
+export default authRouter;
