@@ -35,8 +35,8 @@ const protocolController = {
         rows,
         reportId: reportId,
       });
-      const report = await reportModel.findOne({ _id: '664f3abad99436305977516e' });
-
+      const report = await reportModel.findOne({ _id: reportId });
+			
       if (!report) return res.status(404).json({ message: "Отчет не найден" });
 
       await report.updateOne({
