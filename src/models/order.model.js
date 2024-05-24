@@ -6,20 +6,18 @@ const OrderSchema = new mongoose.Schema(
 			type: String,
 			required: true,
 		},
-		adress: {
+		fullName: {
+			type: String,
+			required: true,
+		},
+		address: {
 			type: String,
 			required: true,
 		},
 		date: {
 			type: Date,
 			default: Date.now,
-
 		},
-		reports: {
-			type: Array,
-			default: [],
-			ref: 'Report'
-		}
 	},
 	{
 		timestamps: true,

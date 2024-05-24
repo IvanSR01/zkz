@@ -10,13 +10,13 @@ const authController = {
     try {
       const { login, password } = req.body;
 
-      const user = userModel.findOne({ email: login });
+      const user = await userModel.findOne({ email: login });
 
       if (!user)
         return res.status(403).json({
           message: "Логин или пароль неверны",
         });
-
+      console;
       const isValidPass = await bcrypt.compare(password, user.password);
 
       if (!isValidPass)
@@ -42,11 +42,11 @@ const authController = {
   },
   async register(req, res) {
     try {
-      const { username, fullName, email, password } = req.body;
+      const { fullName, email, number, password } = req.body;
       const salt = await bcrypt.genSalt(10);
       const hash = await bcrypt.hash(password, salt);
 
-      const oldUser = userModel.findOne({ email: login });
+      const oldUser = await userModel.findOne({ email: email });
 
       if (oldUser)
         return res.status(403).json({
@@ -54,9 +54,9 @@ const authController = {
         });
 
       const user = new userModel({
-        username,
         fullName,
         email,
+				number,
         password: hash,
       });
       const savedUser = await user.save();
@@ -80,8 +80,8 @@ const authController = {
   async getTokens(req, res) {
     try {
       const { refreshToken } = req.body;
-      const { id } = await jwtUtils.verifyToken(refreshToken);
-
+      const { id } =  jwtUtils.verifyToken(refreshToken);
+			console.log(id)
       const { accessToken, refreshToken: newRefreshToken } =
         await jwtUtils.getNewTokens(id);
 

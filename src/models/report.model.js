@@ -6,6 +6,10 @@ const ReportSchema = new mongoose.Schema(
 			type: String,
 			required: true,
 		},
+		orderId: {
+			type: String,
+			required: true,
+		},
 		number: {
 			type: String,
 			required: true,

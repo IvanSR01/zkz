@@ -6,7 +6,7 @@ const ProtocolSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    namesRows: {
+    columns: {
       type: Array,
       required: true,
     },

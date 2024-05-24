@@ -1,10 +1,15 @@
+import reportModel from "../models/report.model.js";
+
 const reportController = {
   async createReport(req, res) {
     try {
       const { id } = req.userData;
-      const { data } = req.body;
+      const { number, date, orderId } = req.body;
+			console.log(req.body)
       const report = new reportModel({
-        data,
+        number: number,
+        date,
+        orderId,
         userId: id,
       });
       await report.save();
@@ -50,14 +55,13 @@ const reportController = {
   async updateReport(req, res) {
     try {
       const { id } = req.params;
-      const { date, protocolsId } = req.body;
+      const { number, date, orderId  } = req.body;
 
       const report = await reportModel.findOne({ _id: id });
 
       if (!report) return res.status(404).json({ message: "Отчет не найден" });
 
-      const protocols = await protocolModel.find({ _id: protocolsId });
-      await report.updateOne({ date, protocols });
+      await report.updateOne({ number, date, orderId  });
 
       return res.status(200).json({
         message: "Отчет успешно обновлен",
@@ -73,11 +77,10 @@ const reportController = {
     try {
       const { id } = req.params;
       const { id: userId } = req.userData;
-      const report = await reportModel.findOne({ _id: id });
+      const report = await reportModel.findOneAndDelete({ _id: id });
       if (!report) return res.status(404).json({ message: "Отчет не найден" });
       if (report.userId !== userId)
         return res.status(403).json({ message: "Нет доступа" });
-      await report.remove();
       return res.status(200).json({
         message: "Отчет успешно удален",
       });

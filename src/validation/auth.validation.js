@@ -29,9 +29,9 @@ const registerValidation = [
 ];
 
 const loginValidation = [
-  body("email")
+  body("login")
     .exists()
-    .withMessage("Поле Email должно быть заполнено")
+    .withMessage("Поле login должно быть заполнено")
     .isEmail()
     .withMessage("Тут должен быть Email"),
 

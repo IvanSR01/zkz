@@ -3,13 +3,12 @@ import orderModel from "../models/order.model.js";
 const orderController = {
   async createOrder(req, res) {
     try {
-      const { data, adress, reports } = req.body;
+      const { data, address, fullName } = req.body;
       const { id } = req.userData;
-
       const order = new orderModel({
         data,
-        adress,
-        reports,
+        address,
+				fullName,
         userId: id,
       });
 
@@ -62,13 +61,13 @@ const orderController = {
   async updateOrder(req, res) {
     try {
       const { id } = req.params;
-      const { data, adress, reports } = req.body;
+      const { data, address, fullName } = req.body;
 
       const order = await orderModel.findOne({ _id: id });
 
       if (!order) return res.status(404).json({ message: "Заказ не найден" });
 
-      await order.updateOne({ data, adress, reports });
+      await order.updateOne({ data, address, fullName });
 
       await order.save();
 
@@ -85,14 +84,12 @@ const orderController = {
       const { id } = req.params;
       const { id: userId } = req.userData;
 
-      const order = await orderModel.findOne({ _id: id });
+      const order = await orderModel.findOneAndDelete({ _id: id });
 
       if (!order) return res.status(404).json({ message: "Заказ не найден" });
 
       if (order.userId !== userId)
         return res.status(403).json({ message: "Нет доступа" });
-
-      await order.remove();
 
       return res.status(200).json({
         message: "Заказ успешно удален",
