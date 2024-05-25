@@ -15,10 +15,6 @@ app.use('/api/v1', apiRouter)
 
 app.listen(port, async () => {
 	try {
-		console.log(process.env.DB_URL)
-
-		app.use(express.urlencoded({ extended: false }))
-		app.use(express.json())
 		mongoose
 			.connect(process.env.DB_URL)
 			.then(() => console.log('DB ok'))

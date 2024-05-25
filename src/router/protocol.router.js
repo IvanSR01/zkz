@@ -15,6 +15,12 @@ protocolRouter.post(
   authMiddleware,
   protocolController.createProtocol
 );
+protocolRouter.post(
+  "/gen-table",
+  authMiddleware,
+  protocolController.generateExcel
+);
+
 protocolRouter.put(
   "/update/:id",
   authMiddleware,

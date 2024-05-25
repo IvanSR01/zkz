@@ -33,7 +33,7 @@ const loginValidation = [
     .exists()
     .withMessage("Поле login должно быть заполнено")
     .isEmail()
-    .withMessage("Тут должен быть Email"),
+    .withMessage("Тут должен быть login"),
 
   body("password")
     .exists()
