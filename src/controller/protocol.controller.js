@@ -1,7 +1,9 @@
 // Импорт моделей протоколов и отчетов
 import protocolModel from "../models/protocol.model.js";
 import reportModel from "../models/report.model.js";
-import xlsx from "xlsx";
+import orderModel from "../models/order.model.js";
+import tableFileUtils from "../utils/table-file.utils.js";
+
 const protocolController = {
   // Метод для получения всех протоколов по идентификатору отчета
   async getProtocols(req, res) {
@@ -36,11 +38,25 @@ const protocolController = {
   // Метод для создания нового протокола
   async createProtocol(req, res) {
     try {
-      const { columns, rows, reportId } = req.body; // Получаем данные протокола из тела запроса
+      const {
+        columns,
+        rows,
+        reportId,
+        title,
+        goal,
+        description,
+        result,
+        methodology,
+      } = req.body; // Получаем данные протокола из тела запроса
       const protocol = new protocolModel({
         columns,
         rows,
         reportId: reportId,
+        title,
+        goal,
+        description,
+        result,
+        methodology,
       });
       const report = await reportModel.findOne({ _id: reportId }); // Ищем отчет по идентификатору
 
@@ -68,11 +84,29 @@ const protocolController = {
   async updateProtocol(req, res) {
     try {
       const { id } = req.params; // Получаем идентификатор протокола из параметров URL
-      const { columns, rows, reportId } = req.body; // Получаем обновленные данные протокола из тела запроса
+      const {
+        columns,
+        rows,
+        reportId,
+        title,
+        goal,
+        description,
+        result,
+        methodology,
+      } = req.body; // Получаем обновленные данные протокола из тела запроса
       const protocol = await protocolModel.findOne({ _id: id }); // Ищем протокол по идентификатору
 
       // Обновляем данные протокола
-      await protocol.updateOne({ columns, rows, reportId });
+      await protocol.updateOne({
+        columns,
+        rows,
+        reportId,
+        title,
+        goal,
+        description,
+        result,
+        methodology,
+      });
 
       return res.status(200).json({
         message: "Протокол успешно обновлен",
@@ -123,46 +157,10 @@ const protocolController = {
 
       if (!protocol)
         return res.status(404).json({ message: "Протокол не найден" });
-
+      const report = await reportModel.findById(protocol.reportId);
+      const order = await orderModel.findById(report.orderId);
       protocol.rows.unshift(protocol.columns);
-
-      const workbook = xlsx.utils.book_new();
-
-      // Преобразуем данные в лист (worksheet)
-      const worksheet = xlsx.utils.aoa_to_sheet(protocol.rows);
-
-      // Определяем ширину колонок в зависимости от контента
-      const columnWidths = protocol.rows[0].map((_, colIndex) => {
-        return {
-          wch: Math.max(
-            ...protocol.rows[0].map((row) => row.toString().length)
-          ),
-        };
-      });
-
-      // Устанавливаем ширину колонок
-      worksheet["!cols"] = columnWidths;
-
-			// центрируем ячейки
-			for (let R = 0; R < protocol.rows.length; ++R) {
-				for (let C = 0; C < protocol.rows[R].length; ++C) {
-						const cellAddress = xlsx.utils.encode_cell({ r: R, c: C });
-						if (!worksheet[cellAddress]) continue;
-						worksheet[cellAddress].s = {
-								alignment: {
-										vertical: 'center',
-										horizontal: 'center'
-								}
-						};
-				}
-		}
-		
-
-      // Добавляем лист в Workbook
-      xlsx.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-
-      // Сохраняем Workbook в файл
-      xlsx.writeFile(workbook, "output.xlsx");
+      tableFileUtils({ report, order, protocol });
       return res.json({
         message: "Файл успешно сгенерирован",
       });

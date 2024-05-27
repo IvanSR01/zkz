@@ -10,19 +10,22 @@ const ReportSchema = new mongoose.Schema(
 			type: String,
 			required: true,
 		},
-		number: {
+		name: {
 			type: String,
 			required: true,
 		},
 		date: {
 			type: Date,
 			default: Date.now,
-
 		},
 		protocols: {
 			type: Array,
 			default: [],
 			ref: 'Protocol'
+		},
+		title: {
+			type: {},
+			default: {}
 		}
 	},
 	{

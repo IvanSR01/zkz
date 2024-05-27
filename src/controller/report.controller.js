@@ -5,11 +5,25 @@ const reportController = {
   async createReport(req, res) {
     try {
       const { id } = req.userData; // Получаем идентификатор пользователя из данных авторизации
-      const { number, date, orderId } = req.body; // Получаем данные отчета из тела запроса
+      const {
+        name,
+        date,
+        orderId,
+        company,
+        subCompany,
+        object,
+        addressObject,
+      } = req.body; // Получаем данные отчета из тела запроса
 
       // Создаем новый объект отчета
       const report = new reportModel({
-        number: number,
+        name,
+        title: {
+          company,
+          subCompany,
+          object,
+          addressObject,
+        },
         date,
         orderId,
         userId: id, // Связываем отчет с пользователем
@@ -80,7 +94,15 @@ const reportController = {
   async updateReport(req, res) {
     try {
       const { id } = req.params; // Получаем идентификатор отчета из параметров URL
-      const { number, date, orderId } = req.body; // Получаем обновленные данные отчета из тела запроса
+      const {
+        name,
+        company,
+        subCompany,
+        object,
+        addressObject,
+        date,
+        orderId,
+      } = req.body; // Получаем обновленные данные отчета из тела запроса
 
       // Ищем отчет по идентификатору
       const report = await reportModel.findOne({ _id: id });
@@ -89,7 +111,17 @@ const reportController = {
       if (!report) return res.status(404).json({ message: "Отчет не найден" });
 
       // Обновляем данные отчета
-      await report.updateOne({ number, date, orderId });
+      await report.updateOne({
+        name,
+        title: {
+          company,
+          subCompany,
+          object,
+          addressObject,
+        },
+        date,
+        orderId,
+      });
 
       // Возвращаем успешный ответ
       return res.status(200).json({

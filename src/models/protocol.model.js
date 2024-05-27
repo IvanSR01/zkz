@@ -14,6 +14,23 @@ const ProtocolSchema = new mongoose.Schema(
       type: Array,
       required: true,
     },
+    title: {
+      type: String,
+      required: true,
+    },
+    goal: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    result: {
+      type: String,
+      required: true,
+    },
+    methodology: {},
   },
   {
     timestamps: true,
