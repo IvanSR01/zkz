@@ -13,6 +13,8 @@ const reportController = {
         subCompany,
         object,
         addressObject,
+				dateLicense,
+				dateOverLicense
       } = req.body; // Получаем данные отчета из тела запроса
 
       // Создаем новый объект отчета
@@ -23,6 +25,8 @@ const reportController = {
           subCompany,
           object,
           addressObject,
+					dateLicense,
+					dateOverLicense
         },
         date,
         orderId,
@@ -101,6 +105,8 @@ const reportController = {
         object,
         addressObject,
         date,
+				dateLicense,
+				dateOverLicense,
         orderId,
       } = req.body; // Получаем обновленные данные отчета из тела запроса
 
@@ -118,6 +124,8 @@ const reportController = {
           subCompany,
           object,
           addressObject,
+					dateLicense,
+					dateOverLicense
         },
         date,
         orderId,

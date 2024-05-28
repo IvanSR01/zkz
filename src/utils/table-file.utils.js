@@ -1,6 +1,4 @@
 import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
 import {
   Document,
   Packer,
@@ -16,23 +14,15 @@ import {
   BorderStyle,
   ImageRun,
 } from "docx";
-
-// Определяем __dirname для ES6 модулей
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import path from "path";
+import {
+  formatDateUtils,
+  pixelsToTwips,
+  parseProtocolTitle,
+} from "./table.utils.js";
 
 const tableFileUtils = ({ protocol, order, report }) => {
-  // Переводим пиксели в твипы (twips)
-  const pixelsToTwips = (pixels) => Math.round(pixels * 15); // 1 пиксель ≈ 15 твипов
 
-  const imagePath = path.join(__dirname, "i2.png");
-
-  // Проверяем, что файл существует
-  if (!fs.existsSync(imagePath)) {
-    throw new Error(`Image not found at path: ${imagePath}`);
-  }
-
-  const imageBuffer = fs.readFileSync(imagePath); // Читаем изображение из файла
   const doc = new Document({
     sections: [
       {
@@ -59,17 +49,134 @@ const tableFileUtils = ({ protocol, order, report }) => {
             alignment: AlignmentType.CENTER,
           }),
           ...Array(3).fill(new Paragraph({ text: " " })), // добавляем пустые строки для отступов
-          new Paragraph({
-            children: [
-              new ImageRun({
-                data: imageBuffer,
-                transformation: {
-                  width: 600,
-                  height: 100,
+          new Table({
+            rows: [
+              new TableRow({
+                children: [
+                  new TableCell({
+                    children: [
+                      new Paragraph({
+                        children: [
+                          new TextRun({
+                            text: `Свидетельство о регистрации № 6377-3 от ${formatDateUtils(
+                              report.title.dateLicense
+                            )}.`,
+                            size: 20,
+                          }),
+                          new TextRun({
+                            text: "\nВыдано Управлением энергетического и строительного",
+                            size: 20,
+                            bold: true,
+                          }),
+                          new TextRun({
+                            text: " надзора Федеральной службы по экологическому,",
+                            size: 20,
+                          }),
+                          new TextRun({
+                            text: "\nтехнологическому и атомному надзору г. Москва",
+                            size: 20,
+                          }),
+                          new TextRun({
+                            text: "\n\nДействительна до: ",
+                            size: 20,
+                            bold: true,
+                          }),
+                          new TextRun({
+                            text: `${formatDateUtils(
+                              report.title.dateOverLicense
+                            )}`,
+                            size: 20,
+                          }),
+                        ],
+                      }),
+                    ],
+                    width: {
+                      size: 61,
+                      type: WidthType.PERCENTAGE,
+                    },
+                    borders: {
+                      top: { style: BorderStyle.NONE, size: 0 },
+                      bottom: { style: BorderStyle.NONE, size: 0 },
+                      left: { style: BorderStyle.NONE, size: 0 },
+                      right: { style: BorderStyle.NONE, size: 0 },
+                    },
+                  }),
+                  new TableCell({
+                    children: [
+                      new Paragraph({ text: "" }), // Пустая ячейка для отступа
+                    ],
+                    width: {
+                      size: 0, // Ширина пустой ячейки для отступа
+                      type: WidthType.PERCENTAGE,
+                    },
+                    borders: {
+                      top: { style: BorderStyle.NONE, size: 0 },
+                      bottom: { style: BorderStyle.NONE, size: 0 },
+                      left: { style: BorderStyle.NONE, size: 0 },
+                      right: { style: BorderStyle.NONE, size: 0 },
+                    },
+                  }),
+                  new TableCell({
+                    children: [
+                      new Paragraph({
+                        children: [
+                          new TextRun({ text: "«Утверждаю»", size: 28 }),
+                        ],
+                        alignment: AlignmentType.CENTER,
+                      }),
+                      new Paragraph({
+                        children: [
+                          new TextRun({
+                            text: "Начальник ЭТЛ ООО «Энергосервис»",
+                          }),
+                        ],
+                        alignment: AlignmentType.CENTER,
+                      }),
+                      new Paragraph({
+                        children: [
+                          new TextRun({
+                            text: "_________________ Н.П.Асташко",
+                          }),
+                        ],
+                        alignment: AlignmentType.CENTER,
+                      }),
+                      new Paragraph({
+                        children: [
+                          new TextRun({
+                            text: "«___» ________________ 2022 г.",
+                          }),
+                        ],
+                        alignment: AlignmentType.CENTER,
+                      }),
+                    ],
+                    width: {
+                      size: 50,
+                      type: WidthType.PERCENTAGE,
+                    },
+                    borders: {
+                      top: { style: BorderStyle.NONE, size: 0 },
+                      bottom: { style: BorderStyle.NONE, size: 0 },
+                      left: { style: BorderStyle.NONE, size: 0 },
+                      right: { style: BorderStyle.NONE, size: 0 },
+                    },
+                  }),
+                ],
+                borders: {
+                  top: { style: BorderStyle.NONE, size: 0 },
+                  bottom: { style: BorderStyle.NONE, size: 0 },
+                  left: { style: BorderStyle.NONE, size: 0 },
+                  right: { style: BorderStyle.NONE, size: 0 },
                 },
               }),
             ],
-            alignment: AlignmentType.CENTER,
+            borders: {
+              top: { style: BorderStyle.NONE, size: 0 },
+              bottom: { style: BorderStyle.NONE, size: 0 },
+              left: { style: BorderStyle.NONE, size: 0 },
+              right: { style: BorderStyle.NONE, size: 0 },
+              insideHorizontal: { style: BorderStyle.NONE, size: 0 },
+              insideVertical: { style: BorderStyle.NONE, size: 0 },
+            },
           }),
           ...Array(7).fill(new Paragraph({ text: " " })), // добавляем пустые строки для отступов
           new Paragraph({
@@ -124,7 +231,10 @@ const tableFileUtils = ({ protocol, order, report }) => {
                 bold: true,
                 size: 28,
               }),
-              new TextRun({ text: `${report.date}`, size: 28 }),
+              new TextRun({
+                text: `${formatDateUtils(report.date)}`,
+                size: 28,
+              }),
             ],
           }),
           ...Array(3).fill(new Paragraph({ text: " " })),
@@ -165,7 +275,9 @@ const tableFileUtils = ({ protocol, order, report }) => {
                             size: 18,
                           }),
                           new TextRun({
-                            text: "Свидетельство регистрации № 6377-3 от 15 июля 2022 г.",
+                            text: `Свидетельство регистрации № 6377-3 от ${formatDateUtils(
+                              report.title.dateLicense
+                            )} г.`,
                             bold: true,
                             underline: true,
                             size: 18,
@@ -177,7 +289,9 @@ const tableFileUtils = ({ protocol, order, report }) => {
                             size: 18,
                           }),
                           new TextRun({
-                            text: "Действительна до: 15 июля 2025 г.",
+                            text: `Действительна до: ${formatDateUtils(
+                              report.title.dateOverLicense
+                            )} г.`,
                             bold: true,
                             underline: true,
                             size: 18,
@@ -265,14 +379,26 @@ const tableFileUtils = ({ protocol, order, report }) => {
           new Paragraph({
             children: [
               new TextRun({
-                text: protocol.title,
+                text: parseProtocolTitle(protocol.title).protocolNumber
+                  ? parseProtocolTitle(protocol.title).protocolNumber
+                  : parseProtocolTitle(protocol.title).protocolName,
                 size: 32,
                 bold: true,
               }),
             ],
             alignment: AlignmentType.CENTER,
           }),
-
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: parseProtocolTitle(protocol.title).protocolNumber
+                  ? parseProtocolTitle(protocol.title).protocolName
+                  : "",
+                size: 24,
+              }),
+            ],
+            alignment: AlignmentType.CENTER,
+          }),
           new Paragraph({
             children: [
               new TextRun({
@@ -397,7 +523,10 @@ const tableFileUtils = ({ protocol, order, report }) => {
 
   // Сохраняем документ в файл
   Packer.toBuffer(doc).then((buffer) => {
-    fs.writeFileSync(path.join(`tables/${protocol.title + " " + Math.random() * 1000}.docx`), buffer);
+    fs.writeFileSync(
+      path.join(`tables/${protocol.title + " " + Math.random() * 1000}.docx`),
+      buffer
+    );
   });
 };
 
