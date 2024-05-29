@@ -1,55 +1,67 @@
+// Утилита для форматирования даты в строку формата "день месяц год".
+
 export const formatDateUtils = (dateString) => {
-	if (!dateString || (typeof dateString !== "string" && !(dateString instanceof Date))) {
-			return "";
-	}
+  // Проверяем, что dateString не пустой и является строкой или объектом Date
+  if (!dateString || (typeof dateString !== "string" && !(dateString instanceof Date))) {
+    return "";
+  }
 
-	if (dateString instanceof Date) {
-			dateString = dateString.toISOString();
-	}
+  // Преобразуем объект Date в строку ISO, если необходимо
+  if (dateString instanceof Date) {
+    dateString = dateString.toISOString();
+  }
 
-	let year, month, day;
+  let year, month, day;
 
-	if (dateString.includes("T")) {
-			const datePart = dateString.split("T")[0];
-			[year, month, day] = datePart.split("-");
-	} else if (dateString.includes("-")) {
-			[year, month, day] = dateString.split("-");
-	} else if (dateString.includes(".")) {
-			[day, month, year] = dateString.split(".");
-	} else {
-			return "";
-	}
+  // Разделяем строку на компоненты даты в зависимости от формата
+  if (dateString.includes("T")) {
+    const datePart = dateString.split("T")[0];
+    [year, month, day] = datePart.split("-");
+  } else if (dateString.includes("-")) {
+    [year, month, day] = dateString.split("-");
+  } else if (dateString.includes(".")) {
+    [day, month, year] = dateString.split(".");
+  } else {
+    return "";
+  }
 
-	const months = [
-			"января", "февраля", "марта", "апреля", "мая", "июня",
-			"июля", "августа", "сентября", "октября", "ноября", "декабря"
-	];
+  // Массив названий месяцев на русском языке
+  const months = [
+    "января", "февраля", "марта", "апреля", "мая", "июня",
+    "июля", "августа", "сентября", "октября", "ноября", "декабря"
+  ];
 
-	const monthName = months[parseInt(month, 10) - 1];
+  // Преобразуем номер месяца в название месяца
+  const monthName = months[parseInt(month, 10) - 1];
 
-	return `${parseInt(day, 10)} ${monthName} ${year} г.`;
+  // Форматируем дату в строку вида "день месяц год"
+  return `${parseInt(day, 10)} ${monthName} ${year} г.`;
 };
 
-export const pixelsToTwips = (pixels) => Math.round(pixels * 15); // 1 пиксель ≈ 15 твипов
-  
+// Утилита для преобразования пикселей в твипы (1 пиксель ≈ 15 твипов)
+export const pixelsToTwips = (pixels) => Math.round(pixels * 15);
+
+// Утилита для парсинга заголовка протокола
 export const parseProtocolTitle = (title) => {
-	// Приведение строки к верхнему регистру
-	const upperTitle = title.toUpperCase().trim();
-	
-	// Регулярное выражение для поиска "ПРОТОКОЛ №" и оставшейся части строки
-	const regex = /^(ПРОТОКОЛ\s*№\d+)\s+(.+)$/i;
-	
-	// Применение регулярного выражения к строке
-	const match = upperTitle.match(regex);
-	if (match) {
-			return {
-					protocolNumber: match[1],
-					protocolName: match[2]
-			};
-	} else {
-			return {
-					protocolNumber: '',
-					protocolName: title
-			};
-	}
+  // Приведение строки к верхнему регистру и удаление лишних пробелов
+  const upperTitle = title.toUpperCase().trim();
+
+  // Регулярное выражение для поиска "ПРОТОКОЛ №" и оставшейся части строки
+  const regex = /^(ПРОТОКОЛ\s*№\d+)\s+(.+)$/i;
+
+  // Применение регулярного выражения к строке
+  const match = upperTitle.match(regex);
+  if (match) {
+    // Если регулярное выражение нашло совпадение, возвращаем разобранные части
+    return {
+      protocolNumber: match[1],
+      protocolName: match[2]
+    };
+  } else {
+    // Если регулярное выражение не нашло совпадение, возвращаем оригинальный заголовок
+    return {
+      protocolNumber: '',
+      protocolName: title
+    };
+  }
 };

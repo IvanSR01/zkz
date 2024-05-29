@@ -1,3 +1,5 @@
+// Файл order.controller.js для контроля заказчиков
+
 // Импорт модели заказов
 import orderModel from "../models/order.model.js";
 

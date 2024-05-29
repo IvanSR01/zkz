@@ -1,3 +1,5 @@
+// Файл report.controller.js для контроля отчетов
+
 import reportModel from "../models/report.model.js";
 
 const reportController = {

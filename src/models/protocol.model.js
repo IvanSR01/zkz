@@ -1,40 +1,54 @@
 import mongoose from "mongoose";
 
+// Определение схемы для хранения данных протокола
 const ProtocolSchema = new mongoose.Schema(
   {
+    // Идентификатор отчета
     reportId: {
       type: String,
-      required: true,
+      required: true, // Поле обязательно для заполнения
     },
+    // Столбцы данных (массив с описанием колонок)
+    // Это столбцы с названием колонок
+		// Пример: ['№п/п', 'Назначение заземлителя, заземляющего устройства']
     columns: {
       type: Array,
-      required: true,
+      required: true, // Поле обязательно для заполнения
     },
+    // Строки данных (массив с данными)
+    // Основная таблица -> Состоит из массива строк(Row) -> Строки же состоят из Массива столбцов(Col), массив столбцов это просто массив string. Пример: ['1', 'Контур защитного заземления ГРЩ 0,4кВ', 'Что ещё']
     rows: {
       type: Array,
-      required: true,
+      required: true, // Поле обязательно для заполнения
     },
+    // Заголовок протокола
     title: {
       type: String,
-      required: true,
+      required: true, // Поле обязательно для заполнения
     },
+    // Цель протокола
     goal: {
       type: String,
-      required: true,
+      required: true, // Поле обязательно для заполнения
     },
+    // Описание протокола
     description: {
       type: String,
-      required: true,
+      required: true, // Поле обязательно для заполнения
     },
+    // Результат измерений или испытаний
     result: {
       type: String,
-      required: true,
+      required: true, // Поле обязательно для заполнения
     },
-    methodology: {},
+    // Методология проведения испытаний или измерений
+		// Методология такая же таблица как и rows
+    methodology: {}, // Поле не обязательно для заполнения
   },
   {
-    timestamps: true,
+    timestamps: true, // Добавляет поля createdAt и updatedAt автоматически
   }
 );
 
+// Экспорт модели на основе схемы ProtocolSchema
 export default mongoose.model("Protocol", ProtocolSchema);

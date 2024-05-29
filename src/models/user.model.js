@@ -1,28 +1,34 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
+// Определение схемы для хранения данных пользователя
 const UserSchema = new mongoose.Schema(
-	{
-		fullName: {
-			type: String,
-			required: true,
-		},
-		email: {
-			type: String,
-			required: true,
-			unique: true,
-		},
-		number: {
-			type: String,
-			required: true,
-		},
-		password: {
-			type: String,
-			required: true,
-		},
-	},
-	{
-		timestamps: true,
-	}
-)
+  {
+    // Полное имя пользователя
+    fullName: {
+      type: String,
+      required: true, // Поле обязательно для заполнения
+    },
+    // Электронная почта пользователя
+    email: {
+      type: String,
+      required: true, // Поле обязательно для заполнения
+      unique: true, // Поле должно быть уникальным
+    },
+    // Номер удостоверения пользователя
+    number: {
+      type: String,
+      required: true, // Поле обязательно для заполнения
+    },
+    // Пароль пользователя
+    password: {
+      type: String,
+      required: true, // Поле обязательно для заполнения
+    },
+  },
+  {
+    timestamps: true, // Добавляет поля createdAt и updatedAt автоматически
+  }
+);
 
-export default mongoose.model('User', UserSchema)
+// Экспорт модели на основе схемы UserSchema
+export default mongoose.model('User', UserSchema);

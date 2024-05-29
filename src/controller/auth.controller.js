@@ -1,3 +1,4 @@
+// Файл auth.controller.js для авторизации и регистрации пользователей
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import userModel from "../models/user.model.js";

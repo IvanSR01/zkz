@@ -1,3 +1,5 @@
+// Файл protocol.controller.js для контроля протоколов
+
 // Импорт моделей протоколов и отчетов
 import protocolModel from "../models/protocol.model.js";
 import reportModel from "../models/report.model.js";
@@ -149,7 +151,7 @@ const protocolController = {
       return res.status(500).json({ message: "Что-то пошло не так" });
     }
   },
-  async generateExcel(req, res) {
+  async generateDocFiles(req, res) {
     try {
       const { id } = req.body;
 

@@ -1,12 +1,18 @@
+// Этот файл содержит правила валидации для маршрутов регистрации и входа в систему.
+// Импортируем модуль для валидации тела запросов из express-validator.
+
 import { body } from "express-validator";
 
+// Правила валидации для регистрации нового пользователя
 const registerValidation = [
+  // Проверяем, что поле email существует, заполнено и содержит корректный email
   body("email")
     .exists()
     .withMessage("Поле Email должно быть заполнено")
     .isEmail()
     .withMessage("Тут должен быть Email"),
 
+  // Проверяем, что поле password существует, заполнено, является строкой и имеет минимальную длину 5 символов
   body("password")
     .exists()
     .withMessage("Поле Пароль должно быть заполнено")
@@ -15,26 +21,31 @@ const registerValidation = [
     .isLength({ min: 5 })
     .withMessage("Пароль должен содержать минимум 5 символов"),
 
+  // Проверяем, что поле fullName существует, заполнено и является строкой
   body("fullName")
     .exists()
     .withMessage("Поле Фио должно быть заполнено")
     .isString()
     .withMessage("Тут должен быть Фио"),
 
+  // Проверяем, что поле number существует, заполнено и является строкой (номер удостоверения)
   body("number")
     .exists()
     .withMessage("Поле номер удостоверение должно быть заполнено")
     .isString()
-    .withMessage(""),
+    .withMessage("Поле номер удостоверение должно быть строкой"),
 ];
 
+// Правила валидации для входа пользователя в систему
 const loginValidation = [
+  // Проверяем, что поле login существует, заполнено и содержит корректный email
   body("login")
     .exists()
     .withMessage("Поле login должно быть заполнено")
     .isEmail()
     .withMessage("Тут должен быть login"),
 
+  // Проверяем, что поле password существует, заполнено, является строкой и имеет минимальную длину 5 символов
   body("password")
     .exists()
     .withMessage("Поле Пароль должно быть заполнено")
@@ -44,6 +55,7 @@ const loginValidation = [
     .withMessage("Пароль должен содержать минимум 5 символов"),
 ];
 
+// Экспортируем объекты с правилами валидации для использования в маршрутах
 export default {
   loginValidation,
   registerValidation,
